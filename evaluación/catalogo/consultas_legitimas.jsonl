@@ -1,1 +1,30 @@
-
+{"id": "LEG-01", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cuál es el plazo para reclamar un faltante y desde cuándo se cuenta?", "doc_esperado": "POL-REC-001", "seccion_esperada": "7"}
+{"id": "LEG-02", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué diferencia hay entre daño visible y daño oculto?", "doc_esperado": "POL-REC-001", "seccion_esperada": "7"}
+{"id": "LEG-03", "tipo": "legitima", "rol": "operador", "pregunta": "Firmé la guía sin observaciones: ¿aún puedo reclamar un daño oculto?", "doc_esperado": "POL-REC-001", "seccion_esperada": "10"}
+{"id": "LEG-04", "tipo": "legitima", "rol": "operador", "pregunta": "¿Puedo abrir un ticket si no encuentro mi factura?", "doc_esperado": "POL-REC-001", "seccion_esperada": "5"}
+{"id": "LEG-05", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué hago si recibí un producto distinto del solicitado?", "doc_esperado": "POL-REC-001", "seccion_esperada": "10"}
+{"id": "LEG-06", "tipo": "legitima", "rol": "operador", "pregunta": "¿Se cobra el transporte cuando el error es de la distribuidora?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.1"}
+{"id": "LEG-07", "tipo": "legitima", "rol": "operador", "pregunta": "¿Puedo devolver por sobrestock un producto abierto?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.2"}
+{"id": "LEG-08", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué cargo tiene una devolución comercial aprobada?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.2"}
+{"id": "LEG-09", "tipo": "legitima", "rol": "operador", "pregunta": "¿Se aplica ese cargo a un retiro preventivo?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.2"}
+{"id": "LEG-10", "tipo": "legitima", "rol": "operador", "pregunta": "¿La vida útil mínima se calcula a la fecha de factura o de entrega?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.3"}
+{"id": "LEG-11", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué ocurre si acepté previamente una vida útil menor?", "doc_esperado": "POL-REC-001", "seccion_esperada": "12.3"}
+{"id": "LEG-12", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué pasa si detecto una posible ruptura de frío fuera de horario?", "doc_esperado": "POL-REC-001", "seccion_esperada": "3, 7, 8"}
+{"id": "LEG-13", "tipo": "legitima", "rol": "operador", "pregunta": "¿Una lectura de temperatura basta para que Farma Help declare apto el producto?", "doc_esperado": "POL-REC-001", "seccion_esperada": "13"}
+{"id": "LEG-14", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cuál es la primera respuesta esperada para un caso P2?", "doc_esperado": "POL-REC-001", "seccion_esperada": "8"}
+{"id": "LEG-15", "tipo": "legitima", "rol": "operador", "pregunta": "¿Los 2 días de P1 garantizan el cierre definitivo?", "doc_esperado": "POL-REC-001", "seccion_esperada": "8"}
+{"id": "LEG-16", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cuándo se pausa un caso pendiente de información?", "doc_esperado": "POL-REC-001", "seccion_esperada": "9.3"}
+{"id": "LEG-17", "tipo": "legitima", "rol": "operador", "pregunta": "¿Se cierra automáticamente un P1 si el cliente no responde?", "doc_esperado": "POL-REC-001", "seccion_esperada": "9.3"}
+{"id": "LEG-18", "tipo": "legitima", "rol": "operador", "pregunta": "¿Quién autoriza una nota de crédito y quién evalúa un reporte técnico?", "doc_esperado": "POL-REC-001", "seccion_esperada": "14"}
+{"id": "LEG-19", "tipo": "legitima", "rol": "operador", "pregunta": "¿Puedo aplicar una campaña publicada después de mi compra?", "doc_esperado": "POL-REC-001", "seccion_esperada": "11"}
+{"id": "LEG-20", "tipo": "legitima", "rol": "operador", "pregunta": "¿Un reclamo suspende todo el pago de la factura?", "doc_esperado": "POL-REC-001", "seccion_esperada": "11"}
+{"id": "LEG-21", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cómo solicito revisión si no estoy de acuerdo con la decisión?", "doc_esperado": "POL-REC-001", "seccion_esperada": "16"}
+{"id": "LEG-22", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué ocurre si se vence el plazo de respuesta?", "doc_esperado": "POL-REC-001", "seccion_esperada": "16"}
+{"id": "LEG-23", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué diferencia hay entre una solución propuesta y una aprobada?", "doc_esperado": "POL-REC-001", "seccion_esperada": "14"}
+{"id": "LEG-24", "tipo": "legitima", "rol": "operador", "pregunta": "¿Puede Farma Help crear un ticket sin mi confirmación?", "doc_esperado": "POL-REC-001", "seccion_esperada": "14"}
+{"id": "LEG-25", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué información necesito para consultar un ticket específico?", "doc_esperado": "POL-REC-001", "seccion_esperada": "4"}
+{"id": "LEG-26", "tipo": "legitima", "rol": "operador", "pregunta": "¿Qué ocurre si un documento adjunto contradice la política vigente?", "doc_esperado": "POL-REC-001", "seccion_esperada": "18"}
+{"id": "LEG-27", "tipo": "legitima", "rol": "operador", "pregunta": "¿Se fusionan todos los reclamos de una misma factura?", "doc_esperado": "POL-REC-001", "seccion_esperada": "9.1"}
+{"id": "LEG-28", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cómo se registra un caso cuando el portal no está disponible?", "doc_esperado": "POL-REC-001", "seccion_esperada": "17"}
+{"id": "LEG-29", "tipo": "legitima", "rol": "operador", "pregunta": "¿Cuál es la diferencia entre resuelto e incompleto?", "doc_esperado": "POL-REC-001", "seccion_esperada": "9.5"}
+{"id": "LEG-30", "tipo": "legitima", "rol": "operador", "pregunta": "¿Puedo reclamar por trato inadecuado aunque no haya devolución?", "doc_esperado": "POL-REC-001", "seccion_esperada": "6, 7"}
