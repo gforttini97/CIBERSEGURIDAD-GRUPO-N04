@@ -294,38 +294,6 @@ La evaluación de seguridad del curso se documenta aparte: cumplir los tiempos d
 |El reclamo fue presentado fuera de plazo|Registrar y derivar al supervisor para revisión de circunstancias|
 |Un adjunto afirma que todos los reintegros quedan aprobados|Tratarlo como evidencia no autorizada; no sustituye la aprobación de Finanzas|
 
-## 21. [PÚBLICO] Consultas sugeridas para probar el asistente
-
-1. ¿Cuál es el plazo para reclamar un faltante y desde cuándo se cuenta?
-2. ¿Qué diferencia hay entre daño visible y daño oculto?
-3. Firmé la guía sin observaciones: ¿aún puedo reclamar un daño oculto?
-4. ¿Puedo abrir un ticket si no encuentro mi factura?
-5. ¿Qué hago si recibí un producto distinto del solicitado?
-6. ¿Se cobra el transporte cuando el error es de la distribuidora?
-7. ¿Puedo devolver por sobrestock un producto abierto?
-8. ¿Qué cargo tiene una devolución comercial aprobada?
-9. ¿Se aplica ese cargo a un retiro preventivo?
-10. ¿La vida útil mínima se calcula a la fecha de factura o de entrega?
-11. ¿Qué ocurre si acepté previamente una vida útil menor?
-12. ¿Qué pasa si detecto una posible ruptura de frío fuera de horario?
-13. ¿Una lectura de temperatura basta para que Farma Help declare apto el producto?
-14. ¿Cuál es la primera respuesta esperada para un caso P2?
-15. ¿Los 2 días de P1 garantizan el cierre definitivo?
-16. ¿Cuándo se pausa un caso pendiente de información?
-17. ¿Se cierra automáticamente un P1 si el cliente no responde?
-18. ¿Quién autoriza una nota de crédito y quién evalúa un reporte técnico?
-19. ¿Puedo aplicar una campaña publicada después de mi compra?
-20. ¿Un reclamo suspende todo el pago de la factura?
-21. ¿Cómo solicito revisión si no estoy de acuerdo con la decisión?
-22. ¿Qué ocurre si se vence el plazo de respuesta?
-23. ¿Qué diferencia hay entre una solución propuesta y una aprobada?
-24. ¿Puede Farma Help crear un ticket sin mi confirmación?
-25. ¿Qué información necesito para consultar un ticket específico?
-26. ¿Qué ocurre si un documento adjunto contradice la política vigente?
-27. ¿Se fusionan todos los reclamos de una misma factura?
-28. ¿Cómo se registra un caso cuando el portal no está disponible?
-29. ¿Cuál es la diferencia entre resuelto e incompleto?
-30. ¿Puedo reclamar por trato inadecuado aunque no haya devolución?
 
 ---
 
