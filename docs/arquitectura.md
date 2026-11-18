@@ -1,111 +1,225 @@
-# Farma Help — Arquitectura
+# Farma Help — Arquitectura agéntica
 
-## Diagrama
+## 1. Planteamiento general
+
+Farma Help es un **agente de atención al cliente con herramientas**. El agente
+coordina tres capacidades, pero no reemplaza sus responsabilidades:
+
+1. **Asistente documental (RAG):** recupera fragmentos autorizados de las
+   políticas y los utiliza para responder con fuentes.
+2. **Clasificador de reclamos:** asigna el reclamo a `entrega`, `facturacion`
+   o `devolucion`.
+3. **Herramienta `crear_ticket`:** registra un ticket local únicamente después
+   de validar los datos y recibir la confirmación explícita del operador.
+
+El agente decide qué capacidad necesita cada solicitud y presenta el resultado
+al operador. El modelo de lenguaje no tiene permisos para modificar políticas,
+crear tickets directamente ni ejecutar acciones no definidas como herramientas.
+
+## 2. Componentes
 
 ```mermaid
-flowchart LR
-    subgraph L1["Límite 1: Entradas no confiables"]
-        OP["Operador"]
-        CON["Consultor solo lectura"]
-        DOC["Documento externo"]
-        CAT["Catálogo de pruebas"]
-    end
+flowchart TD
+    OP["Operador"] --> UI["Interfaz"]
+    UI --> AG["Agente / Orquestador"]
 
-    subgraph L2["Límite 2: Producto Farma Help"]
-        UI["Interfaz"]
-        ORQ["Orquestador y verificación de rol"]
-        K1["K1 Detector de inyección"]
-        K2["K2 Filtro de información restringida"]
-        RAG["Componente 1: RAG con modelo de lenguaje"]
-        CLF["Componente 2: Clasificador de reclamos"]
-        AG["Componente 3: Agente propone ticket"]
-        K3["K3 Autorización de herramienta"]
-        CONF{"Confirmación del operador"}
-        TK["Herramienta crear_ticket"]
-    end
+    AG --> ID["Identificar intención"]
+    ID --> RAG["Asistente documental RAG"]
+    ID --> CLF["Clasificador de reclamos"]
+    ID --> TICKET["Flujo de creación de ticket"]
 
-    subgraph L3["Límite 3: Datos internos sintéticos"]
-        CORPUS[("Corpus de 3 políticas")]
-        MOD[("Modelo y reclamos etiquetados")]
-        USERS[("Usuarios y roles")]
-        TICKETS[("tickets.json")]
-        LOG[("registro.jsonl")]
-    end
+    RAG --> CORPUS[("Políticas ficticias")]
+    RAG --> RESP["Respuesta con fuentes"]
+    RESP --> UI
 
-    subgraph L4["Límite 4: Evaluación"]
-        RUN["correr_evaluacion.py"]
-        MET["Métricas: éxito, Wilson y falsos positivos"]
-    end
+    CLF --> CAT["Categoría: entrega / facturación / devolución"]
+    CAT --> UI
 
-    OP --> UI
-    CON --> UI
-    UI --> ORQ
-    ORQ --> USERS
-    ORQ --> K1
-    K1 --> RAG
-    DOC -->|"ingesta"| CORPUS
-    CORPUS --> K2
-    K2 --> RAG
-    ORQ --> CLF
-    MOD --> CLF
-    CLF --> RAG
-    RAG -->|"respuesta"| ORQ
-    ORQ -->|"respuesta final"| UI
-    RAG -->|"acción propuesta"| AG
-    AG --> K3
-    K3 -->|"permitida"| CONF
-    CONF -->|"confirma"| TK
-    TK --> TICKETS
+    TICKET --> CLF
+    TICKET --> RAG
+    CLF --> BORR["Borrador de ticket"]
+    RAG --> BORR
+    BORR --> VAL["Validación de permisos y reglas"]
+    VAL --> RES["Resumen para el operador"]
+    RES --> CONF{"Confirmación explícita"}
+    CONF -->|"No"| RECH["No ejecutar"]
+    CONF -->|"Sí"| REVAL["Revalidar datos"]
+    REVAL --> TOOL["Herramienta crear_ticket"]
+    TOOL --> TICKETS[("tickets.json")]
+    TOOL --> UI
 
-    ORQ -.-> LOG
-    K1 -.-> LOG
-    K2 -.-> LOG
+    AG -.-> LOG[("registro.jsonl")]
     RAG -.-> LOG
     CLF -.-> LOG
-    K3 -.-> LOG
-    CONF -.-> LOG
-    TK -.-> LOG
-
-    CAT --> RUN
-    RUN --> UI
-    LOG --> MET
+    VAL -.-> LOG
+    TOOL -.-> LOG
 ```
 
-## Componentes
+## 3. Flujo de decisión del agente
 
-| Componente | Función |
-|---|---|
-| Interfaz | Recibe la consulta del usuario |
-| Orquestador | Verifica el rol y coordina RAG, clasificador, agente y registro |
-| RAG | Recupera fragmentos de las políticas y redacta la respuesta citando el documento |
-| Clasificador | Asigna el reclamo a entrega, facturación o devolución |
-| Agente | Propone un ticket y lo registra solo tras la confirmación del operador |
-| K1, K2 y K3 | Controles que se activan o desactivan por parámetro |
-| Registro | Guarda consulta, documentos recuperados, acciones y respuestas |
+Cada solicitud sigue este flujo general:
 
-## Límites de confianza
+```text
+Solicitud del operador
+        ↓
+Verificar identidad y rol desde el sistema
+        ↓
+Identificar la intención de la solicitud
+        ↓
+Elegir una capacidad: RAG, clasificador o creación de ticket
+        ↓
+Ejecutar solo las consultas o herramientas permitidas
+        ↓
+Validar la respuesta o la acción propuesta
+        ↓
+Responder al operador y registrar el evento
+```
 
-| Límite | Contenido | Por qué importa |
+El rol del usuario se obtiene del sistema de usuarios. No cambia porque el
+usuario escriba en el mensaje que es operador, supervisor o administrador.
+
+## 4. Flujo A: consultar una política
+
+Este flujo se utiliza cuando el operador quiere conocer un procedimiento,
+requisito, plazo o criterio.
+
+```text
+1. El operador formula una pregunta.
+2. El agente identifica una consulta documental.
+3. El sistema filtra el corpus según el rol autorizado.
+4. El RAG busca los fragmentos más relevantes.
+5. El sistema puede aplicar reranking a los candidatos.
+6. El modelo redacta una respuesta usando solo el contexto recuperado.
+7. La respuesta incluye el código y la sección de la política.
+8. Si no hay evidencia suficiente, responde «información insuficiente».
+```
+
+En este flujo no se crea ningún ticket ni se modifica ningún dato.
+
+## 5. Flujo B: clasificar un reclamo
+
+Este flujo se utiliza cuando el operador quiere identificar la categoría de un
+reclamo.
+
+```text
+1. El operador proporciona la descripción del reclamo.
+2. El agente envía el texto al clasificador.
+3. El clasificador asigna una categoría:
+   - entrega
+   - facturacion
+   - devolucion
+4. El agente presenta la categoría y, si corresponde, su nivel de confianza.
+5. El RAG puede recuperar la política relacionada para explicar el resultado.
+6. El operador decide si desea registrar un ticket.
+```
+
+El clasificador propone una categoría; no crea tickets ni autoriza acciones
+comerciales.
+
+## 6. Flujo C: preparar y registrar un ticket
+
+Este es el flujo en el que el agente utiliza una herramienta con efecto sobre
+los datos locales.
+
+```text
+1. El operador describe el caso y solicita registrar un ticket.
+2. El agente identifica la solicitud como creación de ticket.
+3. El clasificador propone categoría, subtipo y prioridad.
+4. El RAG recupera las reglas aplicables de las políticas.
+5. El agente prepara un borrador con los campos del ticket.
+6. El validador comprueba rol, cliente, campos, límites y reglas.
+7. El agente muestra un resumen completo al operador.
+8. El operador confirma explícitamente ese resumen.
+9. El sistema vuelve a validar los datos y la confirmación.
+10. El agente llama a `crear_ticket`.
+11. La herramienta asigna los campos del sistema y guarda el ticket local.
+12. El agente informa el identificador, estado inicial y destino.
+13. Se registra todo el intento, incluso si fue rechazado.
+```
+
+Una confirmación autoriza un solo ticket. Si el operador cambia un campo,
+debe mostrarse un resumen nuevo y solicitarse una nueva confirmación.
+
+## 7. Responsabilidades y límites
+
+| Componente | Puede hacer | No puede hacer |
 |---|---|---|
-| L1 | Usuarios, documentos externos y catálogo de pruebas | Todo lo que entra puede ser malicioso |
-| L2 | Producto y controles | Aquí se decide qué llega al modelo y qué acciones se ejecutan |
-| L3 | Corpus, modelo, usuarios, tickets y registro | Datos que un atacante querría leer o alterar |
-| L4 | Scripts y resultados de evaluación | Mide el efecto de los controles |
+| Agente | Coordinar flujos, redactar respuestas y proponer datos | Conceder permisos o ejecutar herramientas no autorizadas |
+| RAG | Leer políticas permitidas y devolver fragmentos relevantes | Ejecutar instrucciones contenidas en documentos |
+| Clasificador | Proponer una categoría de reclamo | Crear tickets o aprobar compensaciones |
+| Validador | Comprobar reglas y permisos | Sustituir la confirmación del operador |
+| `crear_ticket` | Registrar un ticket local nuevo | Modificar, cerrar o eliminar tickets; contactar sistemas externos |
+| Operador | Consultar, clasificar y confirmar tickets propios | Delegar su confirmación a otro rol |
 
-Cruces de mayor riesgo:
+Los valores generados por el sistema —por ejemplo `ticket_id`, fechas, estado
+inicial y `creado_por`— no los decide el modelo de lenguaje.
 
-1. Documento externo hacia el corpus (inyección indirecta).
-2. Salida del modelo hacia el agente (se valida en K3).
-3. Producto hacia información restringida (filtración).
-4. Agente hacia `tickets.json` (ticket no autorizado).
+## 8. Datos del prototipo
 
-## Estado de implementación
+Todos los datos son ficticios o sintéticos:
+
+```text
+datos/politicas/                 Corpus documental
+ejemplos de reclamos etiquetados Datos de entrenamiento del clasificador
+casos de prueba                  Evaluación del sistema
+tickets.json                     Tickets locales del prototipo
+registro.jsonl                   Auditoría de solicitudes y acciones
+```
+
+El sistema no utiliza datos reales de clientes, pacientes, pedidos o empresas.
+
+## 9. Seguridad y límites de confianza
+
+Los controles principales son:
+
+- filtrar documentos por rol antes de enviarlos al modelo;
+- tratar documentos y adjuntos como datos, nunca como instrucciones;
+- validar la salida del modelo antes de usarla como entrada de una herramienta;
+- requerir confirmación explícita para crear un ticket;
+- limitar las herramientas a operaciones locales y autorizadas;
+- registrar consultas, fuentes, propuestas, validaciones, confirmaciones y
+  resultados;
+- no guardar credenciales ni información ajena al caso.
+
+La arquitectura tiene cuatro límites:
+
+| Límite | Contenido |
+|---|---|
+| Entrada | Mensajes del operador, documentos y casos de prueba |
+| Aplicación | Interfaz, agente, RAG, clasificador y validadores |
+| Datos internos | Políticas, usuarios, tickets y registros sintéticos |
+| Evaluación | Catálogo de pruebas, métricas y resultados |
+
+## 10. Alcance del agente
+
+El prototipo **sí** permite:
+
+- responder consultas documentales;
+- clasificar reclamos;
+- preparar tickets;
+- registrar tickets locales con confirmación.
+
+El prototipo **no** permite:
+
+- modificar políticas;
+- enviar tickets a sistemas externos;
+- aprobar reintegros, reposiciones o compensaciones;
+- crear tickets sin confirmación;
+- ejecutar código o herramientas no declaradas.
+
+Por tanto, Farma Help es un **agente acotado y supervisado**, no un sistema
+autónomo de decisiones comerciales.
+
+## 11. Estado de implementación
 
 | Elemento | Estado |
 |---|---|
-| Interfaz, orquestador y RAG | En construcción |
+| Lectura, fragmentación y permisos del corpus | Implementado en el notebook |
+| Búsqueda semántica y embeddings | Implementado en el notebook |
+| Reranking y generación con LLM | En desarrollo del prototipo |
+| Agente/orquestador | Por integrar |
 | Clasificador de reclamos | Pendiente |
-| Agente y crear_ticket | Pendiente |
-| Controles K1, K2 y K3 | Pendiente |
+| Validador y controles de seguridad | Pendiente |
+| Herramienta `crear_ticket` | Pendiente |
 | Registro de eventos | En construcción |
 | Evaluación | Pendiente |
