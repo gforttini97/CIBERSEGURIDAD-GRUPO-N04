@@ -1,0 +1,13 @@
+id,texto,categoria
+REC-001,"El pedido llegó incompleto y falta una caja",entrega
+REC-002,"Recibí un producto diferente al solicitado",entrega
+REC-003,"La entrega se retrasó y aún no recibo el pedido",entrega
+REC-004,"El transportista entregó el paquete en otra dirección",entrega
+REC-005,"La factura tiene un monto cobrado incorrectamente",facturacion
+REC-006,"No encuentro la factura de mi pedido",facturacion
+REC-007,"El importe de la factura no coincide con la cotización",facturacion
+REC-008,"Me cobraron dos veces por la misma compra",facturacion
+REC-009,"Quiero devolver un producto por sobrestock",devolucion
+REC-010,"El producto llegó dañado y solicito una devolución",devolucion
+REC-011,"Necesito iniciar el procedimiento para devolver el pedido",devolucion
+REC-012,"Solicito retiro de un producto por devolución comercial",devolucion

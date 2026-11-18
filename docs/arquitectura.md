@@ -163,7 +163,7 @@ datos/politicas/                 Corpus documental
 ejemplos de reclamos etiquetados Datos de entrenamiento del clasificador
 casos de prueba                  Evaluación del sistema
 tickets.json                     Tickets locales del prototipo
-registro.jsonl                   Auditoría de solicitudes y acciones
+   registros/registro.jsonl         Auditoría de solicitudes y acciones
 ```
 
 El sistema no utiliza datos reales de clientes, pacientes, pedidos o empresas.
@@ -214,12 +214,12 @@ autónomo de decisiones comerciales.
 
 | Elemento | Estado |
 |---|---|
-| Lectura, fragmentación y permisos del corpus | Implementado en el notebook |
-| Búsqueda semántica y embeddings | Implementado en el notebook |
-| Reranking y generación con LLM | En desarrollo del prototipo |
-| Agente/orquestador | Por integrar |
-| Clasificador de reclamos | Pendiente |
-| Validador y controles de seguridad | Pendiente |
-| Herramienta `crear_ticket` | Pendiente |
-| Registro de eventos | En construcción |
+| Lectura, fragmentación y permisos del corpus | Implementado en `src/farma_help/rag/` |
+| Búsqueda semántica y embeddings | Implementado en `src/farma_help/rag/` |
+| Reranking y generación con LLM | Implementado como módulo opcional en `src/farma_help/rag/` |
+| Agente/orquestador | Implementado en `src/farma_help/agente/` |
+| Clasificador de reclamos | Implementado en `src/farma_help/modelo_clasificador/` |
+| Validador y controles de seguridad | Implementado en `controles/` |
+| Herramienta `crear_ticket` | Implementado en `src/farma_help/herramientas/` |
+| Registro de eventos | Implementado en `src/farma_help/auditoria/` |
 | Evaluación | Pendiente |
