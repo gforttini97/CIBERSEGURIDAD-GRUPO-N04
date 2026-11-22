@@ -1,4 +1,3 @@
-
 numpy
 scikit-learn
 sentence-transformers
@@ -6,3 +5,4 @@ faiss-cpu
 google-genai
 python-dotenv
 jupyter
+pandas
