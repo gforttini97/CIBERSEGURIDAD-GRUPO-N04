@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 
 @dataclass(frozen=True)
@@ -51,3 +54,25 @@ def cargar_rutas(raiz: Path | None = None) -> RutasProyecto:
     """Construir la configuración de rutas del proyecto."""
 
     return RutasProyecto.desde_raiz(raiz or encontrar_raiz())
+
+
+def cargar_entorno(ruta_env: Path | None = None) -> None:
+    """Cargar variables de entorno desde ``.env`` ubicado en la raíz del proyecto.
+
+    Si ``ruta_env`` no se proporciona, se busca el archivo ``.env`` en la raíz
+    detectada mediante ``encontrar_raiz``. Las variables ya existentes en el
+    entorno no se sobrescriben.
+    """
+
+    ruta = ruta_env or (encontrar_raiz() / ".env")
+    if ruta.is_file():
+        load_dotenv(ruta, override=False)
+
+
+def variable_entorno(nombre: str, default: str | None = None) -> str:
+    """Obtener una variable de entorno o su valor por defecto."""
+
+    valor = os.getenv(nombre, default)
+    if valor is None:
+        raise ValueError(f"No se encontró la variable de entorno {nombre}.")
+    return valor

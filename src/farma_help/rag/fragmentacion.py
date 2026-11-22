@@ -62,15 +62,30 @@ def crear_chunks_rag(
     limite_tokens: int,
     tamano_ventana: int = 420,
     solapamiento: int = 60,
+    prefijo: str = "",
 ) -> list[dict[str, Any]]:
-    """Subdividir fragmentos largos sin perder sus metadatos."""
+    """Subdividir fragmentos largos sin perder sus metadatos.
+
+    El ``prefijo`` permite adaptar la medición de tokens a modelos que lo
+    requieran (por ejemplo ``"passage: "`` para E5). Por defecto no se añade
+    ningún prefijo, lo cual es adecuado cuando el tokenizador pertenece al
+    modelo de reranking.
+    """
 
     if solapamiento >= tamano_ventana:
         raise ValueError("El solapamiento debe ser menor que la ventana.")
+
+    def _con_prefijo(texto: str) -> str:
+        return (prefijo + texto) if prefijo else texto
+
     chunks: list[dict[str, Any]] = []
     for fragmento in fragmentos:
         texto = fragmento["texto"]
-        entrada = tokenizador("passage: " + texto, add_special_tokens=True, truncation=False)
+        entrada = tokenizador(
+            _con_prefijo(texto),
+            add_special_tokens=True,
+            truncation=False,
+        )
         cantidad = len(entrada["input_ids"])
         if cantidad <= limite_tokens:
             chunks.append({**fragmento, "tokens_entrada": cantidad})
@@ -97,7 +112,7 @@ def crear_chunks_rag(
             }
             nuevo["tokens_entrada"] = len(
                 tokenizador(
-                    "passage: " + nuevo["texto"],
+                    _con_prefijo(nuevo["texto"]),
                     add_special_tokens=True,
                     truncation=False,
                 )["input_ids"]
