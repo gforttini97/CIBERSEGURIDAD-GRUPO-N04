@@ -5,3 +5,6 @@ __pycache__/
 venv/
 .venv/
 .DS_Store
+**/notas
+*.code-workspace
+README_LOCAL.md
